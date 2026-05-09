@@ -1,0 +1,13 @@
+.DS_Store
+*.log
+arttrace.log
+node_modules/
+dist/
+build/
+.vite/
+.env
+.env.*
+Session_*/
+Arttrace_*/
+*/Session_*/
+*/Arttrace_*/

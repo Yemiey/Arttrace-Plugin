@@ -1,0 +1,44 @@
+{
+  "manifestVersion": 5,
+  "id": "arttrace.photoshop",
+  "name": "Arttrace",
+  "version": "0.90",
+  "main": "index.html",
+  "host": [
+    {
+      "app": "PS",
+      "minVersion": "25.0.0"
+    }
+  ],
+  "type": "panel",
+  "entrypoints": [
+    {
+      "type": "panel",
+      "id": "mainPanel",
+      "label": {
+        "default": "Arttrace"
+      },
+      "minimumSize": {
+        "width": 300,
+        "height": 450
+      },
+      "maximumSize": {
+        "width": 600,
+        "height": 900
+      },
+      "preferredDockedSize": {
+        "width": 340,
+        "height": 550
+      }
+    }
+  ],
+  "permissions": {
+    "allowCodeGenerationFromStrings": true,
+    "localFileSystem": "fullAccess",
+    "launchProcess": {
+      "schemes": ["https"],
+      "extensions": ["", ".png", ".jpg", ".json"]
+    },
+    "enableAlerts": true
+  }
+}
