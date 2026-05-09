@@ -4,6 +4,23 @@
   "name": "Arttrace",
   "version": "0.9.0",
   "main": "index.html",
+  "icons": [
+    {
+      "width": 48,
+      "height": 48,
+      "path": "icons/icon-48.png"
+    },
+    {
+      "width": 96,
+      "height": 96,
+      "path": "icons/icon-96.png"
+    },
+    {
+      "width": 192,
+      "height": 192,
+      "path": "icons/icon-192.png"
+    }
+  ],
   "host": [
     {
       "app": "PS",
@@ -36,8 +53,15 @@
     "allowCodeGenerationFromStrings": true,
     "localFileSystem": "fullAccess",
     "launchProcess": {
-      "schemes": ["https"],
-      "extensions": ["", ".png", ".jpg", ".json"]
+      "schemes": [
+        "https"
+      ],
+      "extensions": [
+        "",
+        ".png",
+        ".jpg",
+        ".json"
+      ]
     },
     "enableAlerts": true
   }
