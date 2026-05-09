@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    /* =============================================
+       Arttrace v0.90 — Design System
+       Brand: Magenta Pink #D9467A
+       Style: Apple-inspired dark mode
+       ============================================= */
+
+    :root {
+      --brand: #D9467A;
+      --brand-deep: #8B2D5C;
+      --brand-light: #F5A3C0;
+      --brand-glow: rgba(217, 70, 122, 0.35);
+
+      --bg-body: #1C1A1C;
+      --bg-card: #252223;
+      --bg-elevated: #2E2B2D;
+      --bg-input: #3A3638;
+
+      --recording: #FF2D55;
+      --ready: #34C759;
+      --paused: #FF9F0A;
+      --info: #0A84FF;
+
+      --text-primary: #FFFFFF;
+      --text-secondary: rgba(255, 255, 255, 0.72);
+      --text-muted: rgba(255, 255, 255, 0.45);
+
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.4);
+
+      --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', sans-serif;
+      background: var(--bg-body);
+      color: var(--text-primary);
+      font-size: 13px;
+      line-height: 1.5;
+      min-width: 300px;
+      overflow-y: auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    button,
+    select,
+    textarea {
+      font-family: inherit;
+    }
+
+    /* ===== Scrollbar ===== */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    /* ===== Header ===== */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px 8px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      display: block;
+      object-fit: cover;
+      box-shadow: 0 2px 8px var(--brand-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-text {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-text h1 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1;
+      margin: 0;
+    }
+
+    .version {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      transform: translate(2px, -2px);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-secondary);
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .btn-icon:hover {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      transform: scale(1.05);
+    }
+
+    .btn-icon:active {
+      transform: scale(0.92);
+    }
+
+    /* ===== Hero / Empty State ===== */
+    .hero-section {
+      padding: 0 14px;
+      margin-bottom: 10px;
+    }
+
+    .hero-empty {
+      text-align: left;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .hero-empty .hero-icon {
+      display: none;
+    }
+
+    .hero-empty h2 {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      margin-bottom: 2px;
+    }
+
+    .hero-empty p {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ===== Controls ===== */
+    .controls {
+      padding: 0 14px;
+      margin-bottom: 10px;
+    }
+
+    .circle-hub-wrap { display: flex; justify-content: center; align-items: center; margin: 0 0 22px; position: relative; overflow: visible; }
+    .circle-hub { width: 140px; height: 140px; border-radius: 70px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition-normal); position: relative; outline: none; -webkit-tap-highlight-color: transparent; }
+    .hub-icon { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+    .circle-hub.ready .hub-icon-ready, .circle-hub.recording .hub-icon-recording, .circle-hub.paused .hub-icon-paused { display: block; }
+
+    /* Ready */
+    .circle-hub.ready { background: linear-gradient(180deg, #E85A8A 0%, #D9467A 30%, #B83D6A 65%, #8B2D5C 100%); color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 8px 24px rgba(217,70,122,0.25), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1); }
+    .circle-hub.ready:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(217,70,122,0.3), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(0,0,0,0.1); }
+    .circle-hub.ready:active { transform: scale(0.95); }
+
+    /* Recording: same magenta as ready */
+    .circle-hub.recording {
+      background: linear-gradient(180deg, #E85A8A 0%, #D9467A 30%, #B83D6A 65%, #8B2D5C 100%);
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 8px 28px rgba(217,70,122,0.28), 0 0 48px 12px rgba(217,70,122,0.06), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+
+    /* Paused: same magenta as ready */
+    .circle-hub.paused {
+      background: linear-gradient(180deg, #E85A8A 0%, #D9467A 30%, #B83D6A 65%, #8B2D5C 100%);
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2), 0 8px 28px rgba(217,70,122,0.28), 0 0 48px 12px rgba(217,70,122,0.06), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.1);
+    }
+    .circle-hub.paused:hover { transform: translateY(-2px); box-shadow: 0 4px 8px rgba(0,0,0,0.2), 0 12px 32px rgba(217,70,122,0.3), inset 0 1px 0 rgba(255,255,255,0.25), inset 0 -1px 0 rgba(0,0,0,0.1); }
+    .circle-hub.paused:active { transform: scale(0.95); }
+
+    /* Icons */
+    .hub-shutter-ring { position: absolute; top: 50%; left: 50%; width: 32px; height: 32px; margin: -16px 0 0 -16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.45); display: none; /* 已停用：隐藏外圈 */ }
+    .hub-shutter-dot { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ffd9e8 50%, #ff9ec8 100%); }
+    .hub-finish-sq { position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 4px; background: radial-gradient(circle at 35% 35%, #ffffff 0%, #ffd9e8 50%, #ff9ec8 100%); }
+    .hub-play-tri { position: absolute; top: 50%; left: 50%; width: 0; height: 0; margin: -24px 0 0 -16px; border-top: 24px solid transparent; border-bottom: 24px solid transparent; border-left: 40px solid #FF9F0A; }
+
+    /* Side buttons */
+    .side-btn { width: 44px; height: 44px; border-radius: 22px; background: var(--bg-elevated); border: 1px solid rgba(255,255,255,0.06); cursor: pointer; position: relative; outline: none; -webkit-tap-highlight-color: transparent; margin: 0 20px; }
+    .side-btn.visible { display: flex; align-items: center; justify-content: center; }
+    .side-icon { position: absolute; top: 50%; left: 50%; width: 0; height: 0; display: none; }
+    .side-btn.show-pause .side-icon-pause { display: block; }
+    .side-btn.show-resume .side-icon-resume { display: block; }
+    .side-pause-bars { position: absolute; top: 50%; left: 50%; width: 12px; height: 14px; margin: -7px 0 0 -6px; }
+    .side-pause-bars::before, .side-pause-bars::after { content: ''; position: absolute; top: 0; width: 3px; height: 100%; background: linear-gradient(180deg, #ffffff 0%, #ffeef5 50%, #ffd9e8 100%); border-radius: 2px; }
+    .side-pause-bars::before { left: 0; }
+    .side-pause-bars::after { right: 0; }
+    .resume-icon-inner { position: absolute; top: 50%; left: 50%; width: 22px; height: 22px; margin: -11px 0 0 -11px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #ffeef5; }
+    .side-btn.side-right::before { content: ''; position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; border: 2px solid #ffeef5; }
+    .side-btn.side-right::after { content: ''; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; margin: -3px 0 0 -3px; border-radius: 50%; background: #ffeef5; }
+
+    /* Action bar */
+    .action-bar { display: none; }
+    .action-btn { flex: 1; height: 36px; border: none; border-radius: var(--radius-sm); background: var(--bg-elevated); color: var(--text-secondary); font-size: 13px; font-weight: 500; cursor: pointer; transition: all var(--transition-fast); letter-spacing: -0.01em; }
+    .action-btn:hover:not(:disabled) { background: var(--bg-input); color: var(--text-primary); }
+    .action-btn:active:not(:disabled) { transform: scale(0.96); }
+    .action-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* Preview trigger */
+    .preview-trigger-wrap { display: flex; justify-content: center; padding: 0 16px; margin: 8px 0 12px; }
+    .preview-trigger { width: 100%; height: 32px; padding: 0 14px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); background: var(--bg-card); color: var(--text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; transition: all var(--transition-fast); display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .preview-trigger:hover { background: var(--bg-elevated); color: var(--text-primary); border-color: rgba(255,255,255,0.14); }
+
+    /* Tooltip */
+    .hub-tooltip { position: absolute; top: 150px; left: 50%; transform: translateX(-50%); font-size: 11px; color: rgba(255,255,255,0.7); background: rgba(0,0,0,0.4); padding: 2px 10px; border-radius: 10px; white-space: nowrap; opacity: 0; transition: opacity 200ms ease; pointer-events: none; z-index: 10; }
+    .hub-tooltip.active { }
+    .circle-hub-wrap:hover .hub-tooltip.active { opacity: 1; }
+
+    .btn-secondary {
+      flex: 1;
+      height: 36px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      letter-spacing: -0.01em;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+
+    .btn-secondary:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    .btn-secondary:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* ===== Status HUD ===== */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      margin: 0 14px 8px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--ready);
+      transition: all var(--transition-normal);
+      flex-shrink: 0;
+    }
+
+    .status-dot.recording {
+      background: var(--recording);
+      animation: status-breathe 3s ease-in-out infinite;
+    }
+
+    @keyframes status-breathe {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .status-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      transition: color var(--transition-normal);
+    }
+
+    .status-text.recording { color: var(--recording); }
+    .status-text.ready { color: var(--ready); }
+    .status-text.paused { color: var(--paused); }
+
+    .status-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-badge {
+      display: none;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      background: rgba(10,132,255,0.12);
+      color: var(--info);
+    }
+
+    .tool-badge.brush {
+      background: rgba(217,70,122,0.15);
+      color: var(--brand);
+    }
+
+    .tool-badge.eraser {
+      background: rgba(167,139,250,0.15);
+      color: #A78BFA;
+    }
+
+    .tool-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .session-info {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+
+    /* ===== Path Bar ===== */
+    .path-bar {
+      padding: 0 14px;
+      margin-bottom: 10px;
+    }
+
+    .path-name {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.04);
+      cursor: default;
+    }
+
+    .path-name::before {
+      content: "📁";
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+
+    /* ===== Progress ===== */
+    .progress-area {
+      padding: 0 14px;
+      margin-bottom: 10px;
+      display: none;
+    }
+
+    .progress-area.visible { display: block; }
+
+    .progress-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .progress-pct {
+      font-size: 12px;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+      font-weight: 600;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--brand), var(--brand-light));
+      border-radius: 2px;
+      transition: width var(--transition-normal);
+    }
+
+    .progress-fill.done {
+      background: var(--ready);
+    }
+
+    /* ===== Stats ===== */
+    .stats-area {
+      display: none;
+      flex-direction: row;
+      gap: 8px;
+      padding: 0 16px;
+      margin-bottom: 8px;
+    }
+
+    .stats-area.visible { display: flex !important; }
+
+    .stat-card { flex: 1 1 0; }
+
+    .stat-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      text-align: left;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .stat-value {
+      font-size: 19px;
+      font-weight: 700;
+      color: #fff8fa;
+      letter-spacing: -0.02em;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    #statRest {
+      font-size: 10px;
+      color: #fff8fa;
+      margin-left: 4px;
+      font-weight: 400;
+      vertical-align: middle;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+    }
+
+    /* ===== Panels ===== */
+    .panel {
+      margin: 0 14px 10px;
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.06);
+      overflow: hidden;
+      display: none;
+    }
+
+    .panel.visible { display: block; }
+
+    .panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+
+    .panel-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .panel-count {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .panel-body {
+      padding: 6px;
+      max-height: 160px;
+      overflow-y: auto;
+    }
+
+    /* ===== Timeline ===== */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: background var(--transition-fast);
+    }
+
+    .timeline-item:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .timeline-rhythm {
+      width: 3px;
+      height: 18px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .timeline-rhythm.brush { background: linear-gradient(180deg, var(--brand), var(--brand-light)); }
+    .timeline-rhythm.eraser { background: linear-gradient(180deg, #8B5CF6, #C4B5FD); }
+
+    .timeline-info {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .timeline-step {
+      font-size: 12px;
+      color: var(--text-primary);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      min-width: 40px;
+      margin-left: 4px;
+      position: relative;
+      top: -1px;
+    }
+
+    .timeline-time {
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+      min-width: 42px;
+    }
+
+    .timeline-date {
+      font-size: 11px;
+      color: var(--text-muted);
+      min-width: 32px;
+    }
+
+    .timeline-snap {
+      font-size: 11px;
+      margin-left: auto;
+    }
+
+    /* ===== Sessions ===== */
+    .sessions {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .session-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .session-item:hover {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .session-name {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .session-meta {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ===== Preview ===== */
+    .preview-area {
+      position: relative;
+      aspect-ratio: 16/10;
+      background: var(--bg-body);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 8px;
+    }
+
+    .preview-placeholder {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 12px;
+      padding: 20px;
+    }
+
+    .preview-placeholder-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      opacity: 0.4;
+    }
+
+    .preview-img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .preview-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 8px;
+    }
+
+    .preview-controls-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    .preview-controls-row .preview-select,
+    .preview-controls-row .preview-btn {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .preview-controls-row .preview-btn {
+      min-width: 80px;
+    }
+
+    .preview-select {
+      padding: 6px 10px;
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .preview-select:focus {
+      border-color: var(--brand);
+    }
+
+    .preview-btn {
+      flex: 1;
+      min-width: 80px;
+      height: 36px;
+      border: none;
+      border-radius: var(--radius-sm);
+      background: linear-gradient(180deg, var(--brand) 0%, var(--brand-deep) 100%);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .preview-btn::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .preview-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .preview-btn:active {
+      transform: scale(0.96);
+    }
+
+    .preview-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Zoom Overlay */
+    .zoom-overlay {
+      display: none;
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.92);
+      z-index: 2147483647;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    .zoom-overlay.visible { display: flex; }
+
+    .zoom-overlay.visible ~ .preview-progress,
+    .zoom-overlay.visible ~ .preview-controls {
+      display: none !important;
+    }
+
+    .zoom-img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: var(--text-muted);
+      font-size: 12px;
+    }
+
+    /* Preview Progress */
+    .preview-progress {
+      padding: 0 8px 8px;
+      display: none;
+    }
+
+    .preview-progress.visible { display: block; }
+
+    .preview-progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .preview-progress-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .preview-progress-cancel {
+      padding: 3px 10px;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-muted);
+      font-size: 11px;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+
+    .preview-progress-cancel:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+    }
+
+    /* ===== Settings Overlay ===== */
+    .settings-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-body);
+      z-index: 200;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .settings-overlay.open { display: block; }
+
+    /* ===== Confirm Modal ===== */
+    .confirm-overlay {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      z-index: 300;
+      align-items: center;
+      justify-content: center;
+    }
+    .confirm-overlay.open { display: flex; }
+    .confirm-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 20px;
+      width: 260px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .confirm-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; color: var(--text-primary); }
+    .confirm-body { font-size: 12px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.5; text-align: center; white-space: pre-line; }
+    .confirm-actions { display: flex; gap: 8px; }
+    .confirm-btn { flex: 1; padding: 8px; border-radius: 6px; border: none; cursor: pointer; font-size: 13px; }
+    .confirm-btn.cancel { background: var(--bg-elevated); color: var(--text-secondary); }
+    .confirm-btn.ok { background: var(--brand); color: #fff; }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: sticky;
+      top: 0;
+      background: var(--bg-body);
+      z-index: 10;
+    }
+
+    .settings-title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .settings-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-secondary);
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-fast);
+    }
+
+    .settings-close:hover {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .settings-close:active {
+      transform: scale(0.9);
+    }
+
+    /* Tabs */
+    .settings-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: sticky;
+      top: 61px;
+      background: var(--bg-body);
+      z-index: 10;
+      flex-wrap: nowrap;
+    }
+
+    .settings-tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .settings-tab.active {
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .settings-tab:hover:not(.active) {
+      color: var(--text-secondary);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .settings-section {
+      display: none;
+      padding: 16px;
+    }
+
+    .settings-section.active { display: block; }
+
+    /* Setting Items */
+    .setting-item {
+      margin-bottom: 24px;
+    }
+
+    .setting-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .settings-footer {
+      margin-top: 8px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
+    }
+
+    .settings-footer-dot {
+      margin: 0 4px;
+      opacity: 0.5;
+    }
+
+    .setting-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .setting-desc {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .pill-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .pill:hover {
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+
+    .pill.active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      box-shadow: 0 2px 8px var(--brand-glow);
+    }
+
+    .pill:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* Folder Row */
+    .folder-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .folder-path-text {
+      flex: 1;
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .folder-btn {
+      padding: 5px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-input);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+      font-family: inherit;
+    }
+
+    .folder-btn:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-primary);
+    }
+
+    /* Checkbox */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-elevated);
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--brand);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-row span {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* Diagnostics */
+    .diagnostics-area {
+      padding: 16px;
+    }
+
+    .diagnostics-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .diagnostics-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .diagnostics-version {
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .diagnostics-textarea {
+      width: 100%;
+      height: 140px;
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 11px;
+      font-family: 'SF Mono', SFMono-Regular, ui-monospace, monospace;
+      padding: 10px;
+      resize: vertical;
+      outline: none;
+      line-height: 1.5;
+    }
+
+    .diagnostics-textarea:focus {
+      border-color: rgba(255,255,255,0.1);
+    }
+
+    .diagnostics-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .diag-btn {
+      flex: 1;
+      padding: 8px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-elevated);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      font-family: inherit;
+    }
+
+    .diag-btn:hover {
+      background: var(--bg-input);
+      color: var(--text-primary);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-60px);
+      padding: 10px 20px;
+      border-radius: 20px;
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(255,255,255,0.08);
+      z-index: 9999;
+      opacity: 0;
+      transition: all var(--transition-normal);
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Document switch transition */
+    body.switching .panel,
+    body.switching .hero-section,
+    body.switching .controls,
+    body.switching .status-bar,
+    body.switching .stats-area,
+    body.switching .path-bar {
+      opacity: 0;
+      transition: opacity 250ms ease;
+    }
+
+    .switching-spinner {
+      display: none;
+      width: 10px;
+      height: 10px;
+      border: 2px solid var(--text-muted);
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+
+    body.switching .switching-spinner { display: inline-block; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== UI rewrite step 2: compact tool-panel layout ===== */
+    .hero-section {
+      display: none;
+    }
+
+    .header {
+      padding: 12px 14px 11px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: #191719;
+    }
+
+    .brand {
+      gap: 12px;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.22);
+    }
+
+    .brand-text h1 {
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: 0;
+    }
+
+    .version {
+      font-size: 10px;
+      line-height: 1.1;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.045);
+      border-color: rgba(255,255,255,0.075);
+    }
+
+    .controls {
+      padding: 0 12px;
+      margin-bottom: 8px;
+    }
+
+    .btn-secondary {
+      height: 32px;
+      border-radius: 7px;
+      background: #282528;
+    }
+
+    #infoText {
+      padding: 0 12px 7px !important;
+      min-height: 14px !important;
+      color: rgba(255,255,255,0.42) !important;
+      font-size: 11px !important;
+    }
+
+    .status-bar {
+      margin: 0 12px 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #211f21;
+      border-color: rgba(255,255,255,0.07);
+    }
+
+    .status-text {
+      font-size: 12px;
+    }
+
+    .path-bar,
+    .progress-area,
+    .stats-area {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+
+    .panel {
+      margin-left: 12px;
+      margin-right: 12px;
+    }
+
+    /* ===== UX fixes: persistent effort metrics, scrolling, preview access ===== */
+    html {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      height: 100%;
+      min-height: 0;
+      overflow-y: scroll;
+      position: relative;
+      padding-bottom: 14px;
+    }
+
+    .header {
+      position: relative;
+      z-index: 20;
+    }
+
+    #btnTogglePreview {
+      width: 100%;
+      min-width: 68px;
+      padding: 0 10px;
+      color: rgba(255,255,255,0.78);
+      background: #242124;
+      border-color: rgba(255,255,255,0.09);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    #btnTogglePreview:hover {
+      color: #fff;
+      background: #302c30;
+      transform: none;
+    }
+
+    #btnSettings {
+      width: 32px;
+      color: rgba(255,255,255,0.62);
+      font-size: 14px;
+    }
+
+    .stats-area {
+      display: flex !important;
+      flex-direction: row;
+      gap: 8px;
+      order: 0;
+    }
+
+    .stat-card {
+      min-height: 54px;
+      background: #221f22;
+      border-color: rgba(255,255,255,0.08);
+    }
+
+    .stat-value {
+      font-size: 21px;
+      color: #fff8fa;
+    }
+
+    .stat-label {
+      color: rgba(255,255,255,0.52);
+    }
+
+    .settings-overlay {
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      z-index: 10000 !important;
+    }
+
+    .settings-header,
+    .settings-tabs {
+      position: static !important;
+      top: auto !important;
+      z-index: 10001 !important;
+    }
+
+    .settings-tabs {
+      flex-wrap: nowrap;
+      gap: 4px;
+    }
+
+    .settings-tab {
+      min-height: 30px;
+    }
+
+    .settings-section {
+      padding-top: 12px;
+    }
+
+    .setting-item {
+      margin-bottom: 18px;
+    }
+
+    body.settings-open #replaySection .preview-controls {
+      display: none !important;
+    }
+
+    /* ===== UX fixes step 2: compact circle hub ===== */
+    .circle-hub { width: 120px; height: 120px; border-radius: 60px; }
+    .hub-shutter-ring { width: 28px; height: 28px; margin: -14px 0 0 -14px; display: none; /* 已停用：隐藏外圈 */ }
+    .hub-shutter-dot { width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+    .hub-finish-sq { width: 18px; height: 18px; margin: -9px 0 0 -9px; }
+    .hub-tooltip { top: 128px; }
+
+    #replaySection .panel-body {
+      max-height: none;
+      overflow: visible;
+    }
+
+    #replaySection .preview-area {
+      height: 220px;
+      aspect-ratio: auto;
+      margin: 8px;
+    }
+
+    #replayPreviewGIF {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+    }
+
+    .arttrace-tooltip {
+      position: fixed;
+      display: none;
+      background: rgba(0,0,0,0.92);
+      color: rgba(255,255,255,0.75);
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      z-index: 100;
+      white-space: normal;
+      word-break: break-all;
+      max-width: 280px;
+      pointer-events: none;
+      border: 1px solid rgba(255,255,255,0.08);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Crash Report Layer (v0.87) ===== -->
+  <div id="crashReport" style="display:none;position:fixed;inset:0;background:#1a1a1a;color:rgba(255,255,255,0.88);padding:20px;font-family:monospace;font-size:11px;white-space:pre-wrap;z-index:99999;overflow:auto;">
+    <div style="color:#fff;font-size:13px;margin-bottom:12px;font-family:-apple-system,BlinkMacSystemFont,sans-serif;">
+      ⚠️ Arttrace 启动失败 / Startup Failed<br>
+      <span style="color:rgba(255,255,255,0.45);font-size:11px;">请将下方日志发送给开发者 / Please send the log below to the developer</span>
+    </div>
+    <div id="crashLog" style="background:#111;padding:12px;border-radius:8px;min-height:100px;"></div>
+    <button id="crashCopyBtn" style="margin-top:16px;padding:8px 16px;background:#D9467A;color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer;">复制日志 / Copy Log</button>
+  </div>
+  <!-- Crash report logic moved to main.js to comply with UXP inline-script policy -->
+
+  <!-- ===== Toast ===== -->
+  <div class="toast" id="toast"></div>
+
+  <!-- ===== Header ===== -->
+  <div class="header">
+    <div class="brand" id="brand">
+      <img class="brand-icon" src="arttrace-icon.png" alt="Arttrace">
+      <div class="brand-text">
+        <h1 id="appTitle">Arttrace</h1>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button id="btnSettings" class="btn-icon" title="Settings">⚙️</button>
+    </div>
+  </div>
+
+  <!-- ===== Preview Trigger ===== -->
+  <div class="preview-trigger-wrap">
+    <button id="btnTogglePreview" class="preview-trigger">🎞️ Preview</button>
+  </div>
+
+  <!-- ===== Circle Hub ===== -->
+  <div class="circle-hub-wrap">
+    <!-- Left: Pause / Resume -->
+    <div id="btnSideLeft" class="side-btn side-left" style="display:none;" role="button" tabindex="0">
+      <span class="side-icon side-icon-pause"><i class="side-pause-bars"></i></span>
+      <span class="side-icon side-icon-resume"><span class="resume-icon-inner">▶</span></span>
+    </div>
+
+    <!-- Center: Record / Finish -->
+    <div id="btnRecord" class="circle-hub ready" role="button" tabindex="0">
+      <span class="hub-icon hub-icon-ready">
+        <i class="hub-shutter-ring"></i>
+        <i class="hub-shutter-dot"></i>
+      </span>
+      <span class="hub-icon hub-icon-recording">
+        <i class="hub-finish-sq"></i>
+      </span>
+      <span class="hub-icon hub-icon-paused">
+        <i class="hub-finish-sq"></i>
+      </span>
+    </div>
+
+    <!-- Right: Snapshot -->
+    <div id="btnSideRight" class="side-btn side-right" style="display:none;" role="button" tabindex="0"></div>
+
+    <div class="hub-tooltip" id="hubTooltip"></div>
+  </div>
+
+  <!-- ===== Action Bar ===== -->
+  <div class="action-bar">
+    <button id="btnPause" class="action-btn" disabled>Pause</button>
+    <button id="btnFinish" class="action-btn" disabled>Finish</button>
+  </div>
+
+  <!-- ===== Stats ===== -->
+  <div class="stats-area" id="statsRow" style="display:flex;">
+    <div class="stat-card">
+      <div class="stat-value" id="statSteps">0</div>
+      <div class="stat-label" id="statLabelSteps">Steps</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value"><span id="statTime">0:00</span></div>
+      <div class="stat-label"><span id="statLabelWorkTime">Work Time</span><span id="statRest"></span></div>
+    </div>
+  </div>
+
+  <div id="infoText" style="padding:0 16px 8px;font-size:12px;color:var(--text-muted);font-weight:500;min-height:18px;"></div>
+
+  <!-- ===== Status HUD ===== -->
+  <div class="status-bar">
+    <div class="status-indicator">
+      <div id="recordingPulse" class="status-dot" style="display:none;"></div>
+      <div id="switchingSpinner" class="switching-spinner"></div>
+      <span id="statusText" class="status-text ready">Ready</span>
+    </div>
+    <div class="status-meta">
+      <div id="toolBadge" class="tool-badge brush">
+        <span class="tool-dot brush"></span>
+        <span id="toolBadgeText">1080px</span>
+      </div>
+      <span class="session-info" id="sessionInfo"></span>
+    </div>
+  </div>
+
+  <!-- ===== Path Bar ===== -->
+  <div class="path-bar" id="pathBar" style="display:none;">
+    <span class="path-name" id="folderPath"></span>
+  </div>
+
+  <!-- ===== Progress ===== -->
+  <div class="progress-area" id="progressRow">
+    <div class="progress-label-row">
+      <span class="progress-label" id="progressLabel">Exporting...</span>
+      <span class="progress-pct" id="progressPct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div id="progressFill" class="progress-fill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <!-- ===== Preview Panel ===== -->
+  <div class="panel" id="replaySection">
+    <div class="panel-header">
+      <span class="panel-title" id="replayTitle">Preview</span>
+      <button id="btnClosePreview" class="btn-icon" style="width:26px;height:26px;font-size:12px;">✕</button>
+    </div>
+    <div class="panel-body" style="padding:0;">
+      <div class="preview-area" id="replayPreviewArea">
+        <div class="preview-placeholder" id="replayPreviewPlaceholder">
+          <div class="preview-placeholder-icon">🎬</div>
+          <div id="previewPlaceholderText">Click Preview to generate</div>
+        </div>
+        <img id="replayPreviewGIF" class="preview-img" style="display:none;"/>
+      </div>
+      <div class="zoom-overlay" id="replayZoomOverlay">
+        <img id="replayZoomImg" class="zoom-img"/>
+        <div class="zoom-hint" id="zoomHint">Double-click or press ESC to close</div>
+      </div>
+      <div class="preview-progress" id="replayPreviewProgress">
+        <div class="preview-progress-header">
+          <span class="preview-progress-label" id="replayPreviewProgressLabel">Generating...</span>
+          <button id="btnCancelPreview" class="preview-progress-cancel">Cancel</button>
+        </div>
+        <div class="progress-track">
+          <div id="replayPreviewProgressFill" class="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="preview-controls">
+        <div class="preview-controls-row">
+          <select id="replaySize" class="preview-select">
+            <option value="256">256px</option>
+            <option value="512" selected>512px</option>
+            <option value="720">720px</option>
+            <option value="1080">1080px</option>
+          </select>
+          <select id="previewColors" class="preview-select">
+            <option value="128">128 colors</option>
+            <option value="256" selected>256 colors</option>
+          </select>
+          <select id="previewFPS" class="preview-select">
+            <option value="5">5 FPS</option>
+            <option value="10" selected>10 FPS</option>
+            <option value="15">15 FPS</option>
+            <option value="20">20 FPS</option>
+            <option value="30">30 FPS</option>
+          </select>
+        </div>
+        <div class="preview-controls-row">
+          <button id="btnGeneratePreview" class="preview-btn">Generate</button>
+          <button id="btnSavePreviewGIF" class="preview-btn" style="display:none;background:linear-gradient(180deg,#8B5CF6,#6D28D9);">Export GIF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Video Export (simplified) ===== -->
+  <div class="panel" id="videoExport">
+    <div class="panel-header">
+      <span class="panel-title" id="videoExportTitle">Export</span>
+    </div>
+    <div class="panel-body">
+      <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">🎞 GIF export is available in the Preview panel above.</p>
+      <p id="videoExportHint" style="font-size:11px;color:var(--text-muted);line-height:1.5;">💡 Drag this folder into <b style="color:var(--text-secondary);">Arttrace Render</b> for MP4 video.</p>
+    </div>
+  </div>
+
+  <!-- ===== Timeline ===== -->
+  <div class="panel" id="currentSection">
+    <div class="panel-header">
+      <span class="panel-title" id="currentSectionTitle">Creation History</span>
+      <span class="panel-count">(<span id="stepCount">0</span>)</span>
+    </div>
+    <div class="panel-body">
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </div>
+
+  <!-- ===== Sessions ===== -->
+  <div class="panel" id="sessionsSection">
+    <div class="panel-header">
+      <span class="panel-title" id="sessionsSectionTitle">Saved Records</span>
+      <span class="panel-count">(<span id="sessionCount">0</span>)</span>
+    </div>
+    <div class="panel-body">
+      <div class="sessions" id="sessions"></div>
+    </div>
+  </div>
+
+  <!-- ===== Confirm Modal ===== -->
+  <div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-card">
+      <div class="confirm-title" id="confirmTitle">Finish Recording?</div>
+      <div class="confirm-body" id="confirmBody"></div>
+      <div class="confirm-actions">
+        <button class="confirm-btn cancel" id="btnConfirmCancel">Cancel</button>
+        <button class="confirm-btn ok" id="btnConfirmOk">Finish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Settings Overlay ===== -->
+  <div class="settings-overlay" id="settingsOverlay">
+    <div class="settings-header">
+      <span class="settings-title" id="overlayTitle">Settings</span>
+      <button id="btnCloseSettings" class="settings-close">✕</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="settings-tabs">
+      <button class="settings-tab active" data-tab="general">General</button>
+      <button class="settings-tab" data-tab="capture">Capture</button>
+      <button class="settings-tab" data-tab="diagnostics">Diagnostics</button>
+    </div>
+
+    <!-- General Tab -->
+    <div class="settings-section active" id="tab-general">
+      <div class="setting-item">
+        <div class="setting-label" id="langLabel">Language</div>
+        <div class="pill-group">
+          <button class="pill active" data-lang="en">English</button>
+          <button class="pill" data-lang="zh">中文</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label" id="sessionOutputFolderLabel">Session Output Folder</div>
+        <div class="folder-row">
+          <span class="folder-path-text" id="outputPathDisplay">Not set</span>
+          <button id="btnChangeFolder" class="folder-btn">Change</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label" id="gifExportFolderLabel">GIF Export Folder</div>
+        <div class="folder-row">
+          <span class="folder-path-text" id="gifPathDisplay">Not set</span>
+          <button id="btnChangeGIFFolder" class="folder-btn">Change</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label" id="snapshotFolderLabel2">Snapshot Folder</div>
+        <div class="folder-row">
+          <span class="folder-path-text" id="snapshotPathDisplay">Not set</span>
+          <button id="btnChangeSnapshotFolder" class="folder-btn">Change</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <label class="checkbox-row">
+          <input type="checkbox" id="chkAutoOpenPreview" checked>
+          <span id="lblAutoOpenPreview">Auto-open Preview after finish</span>
+        </label>
+      </div>
+
+      <div class="settings-footer" id="settingsFooter">
+        <span>Arttrace v0.90</span>
+        <span class="settings-footer-dot">·</span>
+        <span id="settingsFooterTag">Made for creators</span>
+      </div>
+    </div>
+
+    <!-- Capture Tab -->
+    <div class="settings-section" id="tab-capture">
+      <div class="setting-item">
+        <div class="setting-label" id="resLabel">Resolution</div>
+        <div class="setting-desc" id="maxSnapshotSizeDesc">Maximum size of captured snapshots</div>
+        <div class="pill-group">
+          <button class="pill" data-size="512">512</button>
+          <button class="pill active" data-size="1080">1080</button>
+          <button class="pill" data-size="1440">2K</button>
+          <button class="pill" data-size="2160">4K</button>
+          <button class="pill" data-size="0" id="resOriginal">Original</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label" id="detectLabel">Detect Interval</div>
+        <div class="setting-desc" id="detectIntervalDesc">How often to check for new strokes</div>
+        <div class="pill-group">
+          <button class="pill detect-btn" data-detect="100">100ms</button>
+          <button class="pill detect-btn" data-detect="200">200ms</button>
+          <button class="pill detect-btn active" data-detect="300">300ms</button>
+          <button class="pill detect-btn" data-detect="400">400ms</button>
+          <button class="pill detect-btn" data-detect="500">500ms</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label" id="densityLabel">Snapshot Density</div>
+        <div class="setting-desc" id="snapshotDensityDesc">Proportion of step snapshots to keep</div>
+        <div class="pill-group">
+          <button class="pill density-btn active" data-density="high">High</button>
+          <button class="pill density-btn" data-density="medium">Medium</button>
+          <button class="pill density-btn" data-density="low">Low</button>
+        </div>
+      </div>
+
+      <div class="setting-item">
+        <div class="setting-label" id="snapshotFormatLabel">Snapshot Format</div>
+        <div class="setting-desc" id="snapshotFormatDesc">Format for manual snapshots</div>
+        <div class="pill-group">
+          <button class="pill format-btn active" data-format="png" id="formatPNG">PNG</button>
+          <button class="pill format-btn" data-format="jpeg" id="formatJPEG">JPEG</button>
+        </div>
+      </div>
+
+      <div class="setting-item" style="display:flex;gap:8px;">
+        <button id="btnSaveCustom" class="btn-secondary" style="flex:1;">Save Custom</button>
+        <button id="btnResetDefault" class="btn-secondary" style="flex:1;">Reset Default</button>
+      </div>
+
+      <div class="settings-footer" id="settingsFooterCapture">
+        <span>Arttrace v0.90</span>
+        <span class="settings-footer-dot">·</span>
+        <span>Made for creators</span>
+      </div>
+    </div>
+
+    <!-- Diagnostics Tab -->
+    <div class="settings-section" id="tab-diagnostics">
+      <div class="diagnostics-area">
+        <div class="diagnostics-header">
+          <span class="diagnostics-label" id="diagnosticsLabel">Diagnostics</span>
+        </div>
+        <textarea id="diagnosticsLogText" class="diagnostics-textarea" readonly placeholder="Logs will appear here..." data-placeholder-key="logsPlaceholder"></textarea>
+        <div class="diagnostics-actions">
+          <button id="btnExportDiagnostics" class="diag-btn">📝 Export Log</button>
+          <button id="btnClearDiagnostics" class="diag-btn">🗑 Clear Log</button>
+        </div>
+      </div>
+
+      <div class="settings-footer" id="settingsFooterDiagnostics">
+        <span>Arttrace v0.90</span>
+        <span class="settings-footer-dot">·</span>
+        <span>Made for creators</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="arttraceTooltip" class="arttrace-tooltip"></div>
+  <script src="libs.js"></script>
+  <script src="jpeg-encoder.js"></script>
+  <script src="main.js?v=170"></script>
+</body>
+</html>
