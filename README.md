@@ -1,14 +1,8 @@
 # Arttrace Photoshop 插件
 
-## 下载 / Download
+<sub><em>普通用户请点击页面右侧的 <strong>Releases</strong>，下载最新的 <code>Arttrace-macOS-v0.90.zip</code>。如果你不熟悉 GitHub，请不要点击绿色的 <strong>Code</strong> 下载源码，安装包在 <strong>Releases</strong> 里。</em></sub>
 
-普通用户请点击页面右侧的 **Releases**，下载最新的 `Arttrace-macOS-v0.90.zip`。
-
-如果你不熟悉 GitHub：不要点击绿色的 **Code** 下载源码，安装包在右侧 **Releases** 里。
-
-For regular users, please click **Releases** on the right side of this page and download the latest `Arttrace-macOS-v0.90.zip`.
-
-If you are not familiar with GitHub, do not use the green **Code** button. The installer is in **Releases**.
+<sub><em>For regular users, click <strong>Releases</strong> on the right side of this page and download <code>Arttrace-macOS-v0.90.zip</code>. If you are not familiar with GitHub, do not use the green <strong>Code</strong> button; the installer is in <strong>Releases</strong>.</em></sub>
 
 当前插件版本：**v0.90**
 
