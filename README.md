@@ -19,7 +19,7 @@ Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘�
 
 普通用户建议直接下载 GitHub Releases 中的 macOS 安装包：
 
-[下载 Arttrace macOS v0.90](https://github.com/Yemiey/Arttrace-Plugin/releases/tag/v0.90)
+[下载 Arttrace macOS v0.90](https://github.com/Yemiey/Arttrace-Plugin/releases/download/v0.90/Arttrace-macOS-v0.90.zip)
 
 如果你不熟悉 GitHub，请下载 Release 页面中的 `Arttrace-macOS-v0.90.zip`。不要点击绿色的 **Code** 按钮，那里下载的是源码。
 
@@ -112,7 +112,7 @@ This repository contains the open-source Photoshop plugin. The companion desktop
 
 For regular users, the recommended way is to download the macOS installer from GitHub Releases:
 
-[Download Arttrace macOS v0.90](https://github.com/Yemiey/Arttrace-Plugin/releases/tag/v0.90)
+[Download Arttrace macOS v0.90](https://github.com/Yemiey/Arttrace-Plugin/releases/download/v0.90/Arttrace-macOS-v0.90.zip)
 
 If you are not familiar with GitHub, download `Arttrace-macOS-v0.90.zip` from the Release page. Do not use the green **Code** button unless you want the source code.
 
