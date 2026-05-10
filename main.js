@@ -110,6 +110,7 @@ var i18n = {
         psBusy: "Photoshop is busy — try again",
         gifExported: "GIF exported: {name}",
         settingsSaved: "✅ Saved",
+        namedSaveAsKeptProject: "Document saved as {name}. Arttrace kept the current project folder.",
         confirmFinishBody: "{steps} steps · Work time {time}\nAre you sure you want to finish?",
     },
     zh: {
@@ -209,6 +210,7 @@ var i18n = {
         psBusy: "Photoshop 正忙，请重试",
         gifExported: "GIF 已导出：{name}",
         settingsSaved: "✅ 已保存",
+        namedSaveAsKeptProject: "文档已另存为 {name}。Arttrace 已保留当前工程文件夹。",
         confirmFinishBody: "已录制 {steps} 笔 · 工作时长 {time}\n确定要完成吗?",
     }
 };
@@ -238,6 +240,9 @@ function refreshUI() {
     el = document.getElementById("btnFinish"); if (el) el.textContent = t("finish");
     el = document.getElementById("langLabel"); if (el) el.textContent = t("langLabel");
     el = document.getElementById("overlayTitle"); if (el) el.textContent = t("settings");
+    document.querySelectorAll(".pill[data-lang]").forEach(function(btn) {
+        btn.classList.toggle("active", btn.dataset.lang === currentLang);
+    });
 
     // v0.84: hero empty state i18n
     el = document.getElementById("heroTitle"); if (el) el.textContent = t("heroTitle");
@@ -697,6 +702,9 @@ var exportFailCount = 0; // v0.84: consecutive export failure counter
 var workTimeTimer = null;
 var lastUndoDelta = 0;   // v0.84: tracks how many steps were undone last, to detect redo
 var finishInProgress = false; // v0.88: prevent duplicate finalize calls during document close
+var saveNotificationReady = false;
+var lastSaveNotificationAt = 0;
+var saveReconcileTimer = null;
 
 // ============================================
 // v0.84: Per-Document State Management
@@ -894,6 +902,17 @@ async function onDocumentSwitch(newDocId) {
 
     log("INFO", "[docSwitch] " + (activeDocId || "none") + " -> " + newDocId + " (" + docTitle + ")");
 
+    // PS can change doc.id during Save As. Only reconcile across doc IDs when a
+    // save notification just happened; a normal document switch must not rename
+    // one project folder into another document's name.
+    if (activeDocId && currentParentFolder && doc && lastSaveNotificationAt && (Date.now() - lastSaveNotificationAt < 4000)) {
+        try {
+            await reconcileDocumentSave("docSwitch/save-event", true);
+        } catch (saveSwitchErr) {
+            log("WARN", "[docSwitch] save-event reconcile failed: " + (saveSwitchErr.message || saveSwitchErr));
+        }
+    }
+
     // Save old document state
     if (activeDocId) {
         if (recordingState === "recording") {
@@ -931,7 +950,7 @@ async function onDocumentSwitch(newDocId) {
     if (currentSteps.length > 0) {
         if (currentSection) currentSection.classList.add("visible");
         if (statsRow) statsRow.classList.add("visible");
-        if (pathBar && currentSessionFolder) pathBar.style.display = "block";
+        refreshProjectPathBar(!!currentSessionFolder);
     } else {
         if (currentSection) currentSection.classList.remove("visible");
         if (statsRow) statsRow.classList.remove("visible");
@@ -1045,6 +1064,34 @@ try {
     log("INFO", "Arttrace API OK, imaging=" + !!imaging);
 } catch (e) {
     logError("API initialization failed", e);
+}
+
+function initSaveNotificationListener() {
+    if (saveNotificationReady || !ps || !ps.action || typeof ps.action.addNotificationListener !== "function") return;
+    try {
+        ps.action.addNotificationListener(["save"], function(event, descriptor) {
+            var stage = "";
+            try {
+                stage = descriptor && descriptor.saveStage && descriptor.saveStage._value ? descriptor.saveStage._value : "";
+            } catch (e) {}
+            if (stage && stage !== "saveSucceeded") {
+                log("INFO", "[saveEvent] save stage=" + stage);
+                return;
+            }
+            lastSaveNotificationAt = Date.now();
+            log("INFO", "[saveEvent] save detected stage=" + (stage || "unknown"));
+            if (saveReconcileTimer) clearTimeout(saveReconcileTimer);
+            saveReconcileTimer = setTimeout(function() {
+                reconcileDocumentSave("saveEvent", true).catch(function(err) {
+                    log("WARN", "[saveEvent] reconcile failed: " + (err.message || err));
+                });
+            }, 350);
+        });
+        saveNotificationReady = true;
+        log("INFO", "[saveEvent] notification listener registered");
+    } catch (e) {
+        log("WARN", "[saveEvent] notification listener unavailable: " + (e.message || e));
+    }
 }
 
 // ============================================
@@ -1452,7 +1499,63 @@ function projectNameFromSaveTarget(filePath, docTitle) {
 }
 
 function looksLikeUntitledProjectName(name) {
-    return /^Untitled(?:[_\-\s]?\d+)?$/i.test(name || "");
+    return /^(Untitled|未标题|未命名)(?:[_\-\s]?\d+)?$/i.test(name || "");
+}
+
+function refreshProjectPathBar(forceVisible) {
+    if (!folderPath || !pathBar) return;
+    if (!currentParentFolder) {
+        folderPath.textContent = "";
+        pathBar.style.display = "none";
+        return;
+    }
+    var projectName = currentParentFolder.name || "";
+    var sessionName = currentSessionFolder && currentSessionFolder.name ? currentSessionFolder.name : "";
+    folderPath.textContent = sessionName ? (projectName + " / " + sessionName) : projectName;
+    if (forceVisible || recordingState !== "ready") {
+        pathBar.style.display = "block";
+    }
+}
+
+async function reconcileDocumentSave(reason, allowCrossDocAfterSave) {
+    if (!ps || !ps.app || !ps.app.activeDocument || !currentParentFolder) return false;
+    var doc = ps.app.activeDocument;
+    var docId = doc ? doc.id : 0;
+    var currentDocStillBound = !activeDocId || !docId || activeDocId === docId;
+    var recentSaveEvent = lastSaveNotificationAt && (Date.now() - lastSaveNotificationAt < 4000);
+    if (!currentDocStillBound && !(allowCrossDocAfterSave && recentSaveEvent)) {
+        log("INFO", "[saveReconcile] skipped " + reason + " because active doc changed without a recent save event");
+        return false;
+    }
+
+    var filePath = doc.filePath || "";
+    var title = doc.title || "";
+    var targetName = projectNameFromSaveTarget(filePath, title);
+    if (!targetName || looksLikeUntitledProjectName(targetName)) return false;
+    if (targetName === currentParentFolder.name) {
+        lastFilePath = filePath;
+        lastDocTitle = title;
+        return false;
+    }
+
+    var projectWasUntitled = looksLikeUntitledProjectName(currentParentFolder.name);
+    if (!projectWasUntitled) {
+        log("WARN", "[saveReconcile] named-project Save As detected but not auto-renamed: " +
+            (currentParentFolder.name || "?") + " -> " + targetName + " reason=" + reason);
+        setStatus(t("namedSaveAsKeptProject", { name: targetName }), "ready");
+        refreshProjectPathBar(recordingState !== "ready");
+        lastFilePath = filePath;
+        lastDocTitle = title;
+        return false;
+    }
+
+    log("INFO", "[saveReconcile] auto-renaming untitled project via " + reason + ": " +
+        (currentParentFolder.name || "?") + " -> " + targetName);
+    await handleDocumentSaveAs(filePath, title);
+    refreshProjectPathBar(recordingState !== "ready");
+    lastFilePath = filePath;
+    lastDocTitle = title;
+    return true;
 }
 
 async function scanForExistingProject(parentFolder, projectInfo) {
@@ -2245,7 +2348,7 @@ async function handleDocumentSaveAs(newFilePath, newDocTitle) {
                     log("WARN", "[saveAs] could not re-acquire session folder after rename: " + se.message);
                 }
                 // Update UI path display
-                if (folderPath) folderPath.textContent = newName + " / " + (currentSessionFolder ? currentSessionFolder.name : sessName);
+                refreshProjectPathBar(recordingState !== "ready");
                 
                 // v0.85: update projectMappings
                 try {
@@ -2334,7 +2437,7 @@ async function handleDocumentSaveAs(newFilePath, newDocTitle) {
                     log("WARN", "[saveAs] could not create session folder: " + se.message);
                 }
                 // Update UI path display for fallback too
-                if (folderPath) folderPath.textContent = newName + " / " + (currentSessionFolder ? currentSessionFolder.name : oldSessName);
+                refreshProjectPathBar(recordingState !== "ready");
             }
         } catch (e2) {
             log("WARN", "[saveAs] create new folder failed: " + e2.message);
@@ -2357,6 +2460,17 @@ async function handleDocumentClose() {
         delete projectMappings[unsavedKey];
         log("INFO", "[docClose] cleaned up unsaved mapping " + unsavedKey);
     }
+    if (recordingState === "ready" && closingDocId) {
+        activeDocId = 0;
+        currentProjectDocId = 0;
+        currentProjectMappingKey = "";
+        currentSessionFolder = null;
+        currentParentFolder = null;
+        currentParentFolderPath = "";
+        outputFolderEntry = null;
+        lastFilePath = "";
+        lastDocTitle = "";
+    }
 }
 
 async function capture() {
@@ -2378,32 +2492,8 @@ async function capture() {
     if (lastFilePath !== currentFilePath || lastDocTitle !== currentDocTitle) {
         log("INFO", "[capture] filePath change detected: lastFp='" + lastFilePath + "' -> currFp='" + currentFilePath + "' lastTitle='" + lastDocTitle + "' -> currTitle='" + currentDocTitle + "'");
     }
-    // v0.84: Primary detection via filePath change; fallback via title change with .psd extension
-    // because doc.filePath can remain empty even after Save As on some PS builds
-    var isSaveAs = false;
-    if (lastFilePath === "" && currentFilePath !== "") {
-        isSaveAs = true; // Untitled -> Saved
-    } else if (lastFilePath !== "" && currentFilePath !== lastFilePath) {
-        isSaveAs = true; // Saved -> Saved As
-    } else if (lastFilePath === "" && currentFilePath === "" && lastDocTitle !== currentDocTitle && /\.(psd|psb|psdt)$/i.test(currentDocTitle)) {
-        isSaveAs = true; // Untitled/saved -> Save As (filePath not available, title changed to Photoshop file)
-    } else if (lastFilePath === "" && currentFilePath === "" && lastDocTitle !== currentDocTitle && currentParentFolder) {
-        // Some PS/UXP builds expose a Save As only as a title change, and the
-        // title may not include ".psd". Treat project folder name -> real title
-        // changes as Save As, including Untitled_* and saved-project renames.
-        var titleName = projectNameFromSaveTarget("", currentDocTitle);
-        if (titleName && titleName !== currentParentFolder.name &&
-            !looksLikeUntitledProjectName(titleName)) {
-            isSaveAs = true;
-        }
-    }
-    if (isSaveAs) {
-        if (currentParentFolder) {
-            log("INFO", "[capture] SAVE-AS TRIGGERED (filePath=" + (currentFilePath || "(empty)") + "), calling handleDocumentSaveAs");
-            await handleDocumentSaveAs(currentFilePath, currentDocTitle);
-        } else {
-            log("INFO", "[capture] title/path changed but no active project folder; treating as document open baseline");
-        }
+    if ((lastFilePath !== currentFilePath || lastDocTitle !== currentDocTitle) && currentParentFolder) {
+        await reconcileDocumentSave("capture", false);
     }
     lastFilePath = currentFilePath;
     lastDocTitle = currentDocTitle;
@@ -2958,7 +3048,19 @@ async function startRecording() {
         saveSettings();
     }
 
+    if (!outputFolderEntry && parentFolder) {
+        outputFolderEntry = parentFolder;
+    }
+
     var projectInfo = getProjectName();
+    try {
+        var allowCrossDocSave = !!(activeDocId && activeDocId !== newDocId && lastSaveNotificationAt && (Date.now() - lastSaveNotificationAt < 4000));
+        await reconcileDocumentSave("startRecording", allowCrossDocSave);
+        projectInfo = getProjectName();
+    } catch (startSaveErr) {
+        log("WARN", "[startRecording] pending Save-As handling failed: " + (startSaveErr.message || startSaveErr));
+    }
+
     var docKey = getDocKey(projectInfo);
     // v0.87: truly unsaved docs use doc.id so new untitled docs don't collide.
     // v0.88: if UXP gives only a Photoshop title like "3332.psd", treat it as
@@ -3122,8 +3224,7 @@ async function startRecording() {
     if (sessionsSection) sessionsSection.classList.toggle("visible", sessions.length > 0);
     hideProgress();
 
-    if (folderPath) folderPath.textContent = projectName + " / " + sessionName;
-    if (pathBar) pathBar.style.display = "block";
+    refreshProjectPathBar(true);
     if (infoText) infoText.textContent = t("infoRecording", { n: sessionName, f: globalStepOffset });
 
     activeDocId = newDocId;
@@ -3271,9 +3372,10 @@ async function finishRecording() {
         } catch (e) { logError("[finishRecording] save project_state failed", e); }
     }
 
-    // v0.84: save finished state AFTER setting ready, so docSwitch doesn't reload recording state
+    // Keep activeDocId after Finish. The detect loop still runs so a later
+    // Save As can rename the just-finished Untitled_* project before the user
+    // starts a new part or closes the document.
     if (activeDocId) { docStates[activeDocId] = packState(); }
-    activeDocId = 0;
     updatePrimaryActionButton();
 
     // v0.84: push finished session to in-panel sessions list
@@ -4353,6 +4455,7 @@ try {
         initTimeline();
         if (outputPathDisplay) outputPathDisplay.textContent = outputFolderPath || t("notSet");
         if (gifPathDisplay) gifPathDisplay.textContent = gifOutputFolderPath || t("notSet");
+        initSaveNotificationListener();
         tryRecoverSession();
         log("INFO", "Arttrace v0.90 loaded — project_state.json + continuous step/workTime + no auto-downgrade");
     }).catch(function(err) {
