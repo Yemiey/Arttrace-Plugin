@@ -1,5 +1,15 @@
 # Arttrace Photoshop 插件
 
+## 下载 / Download
+
+普通用户请点击页面右侧的 **Releases**，下载最新的 `Arttrace-macOS-v0.90.zip`。
+
+如果你不熟悉 GitHub：不要点击绿色的 **Code** 下载源码，安装包在右侧 **Releases** 里。
+
+For regular users, please click **Releases** on the right side of this page and download the latest `Arttrace-macOS-v0.90.zip`.
+
+If you are not familiar with GitHub, do not use the green **Code** button. The installer is in **Releases**.
+
 当前插件版本：**v0.90**
 
 Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘画过程中的步骤截图，并生成可供后续渲染使用的工程文件夹。它主要面向希望记录绘画过程、制作延时视频或 GIF 预览的创作者。
