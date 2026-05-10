@@ -1,18 +1,29 @@
 # Arttrace Photoshop 插件
 
-<sub><em>普通用户请点击页面右侧的 <strong>Releases</strong>，下载最新的 <code>Arttrace-macOS-v0.90.zip</code>。如果你不熟悉 GitHub，请不要点击绿色的 <strong>Code</strong> 下载源码，安装包在 <strong>Releases</strong> 里。</em></sub>
-
-<sub><em>For regular users, click <strong>Releases</strong> on the right side of this page and download <code>Arttrace-macOS-v0.90.zip</code>. If you are not familiar with GitHub, do not use the green <strong>Code</strong> button; the installer is in <strong>Releases</strong>.</em></sub>
-
-当前插件版本：**v0.90**
+当前版本：**v0.90 macOS 公开测试版**
 
 Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘画过程中的步骤截图，并生成可供后续渲染使用的工程文件夹。它主要面向希望记录绘画过程、制作延时视频或 GIF 预览的创作者。
 
 这个仓库包含 **Arttrace Photoshop 插件源码**。配套桌面端软件 **Arttrace Render** 会以安装包形式发布在 GitHub Releases 中，但它的源码不包含在本仓库里。
 
+## 功能简介
+
+- 将 Photoshop 绘画过程记录为 JPEG 步骤截图。
+- 统计每个作品的录制步骤和绘画时长。
+- 支持长时间绘画时自动拆分为多个 part。
+- 生成 Arttrace Render 可以读取的元数据。
+- 在 Photoshop 插件内提供快速 GIF 预览。
+- 支持中文和英文界面。
+
 ## 下载与安装
 
-普通用户建议直接下载 GitHub Releases 中的 macOS 安装包。安装包会同时安装：
+普通用户建议直接下载 GitHub Releases 中的 macOS 安装包：
+
+[下载 Arttrace macOS v0.90](https://github.com/Yemiey/Arttrace-Plugin/releases/tag/v0.90)
+
+如果你不熟悉 GitHub，请下载 Release 页面中的 `Arttrace-macOS-v0.90.zip`。不要点击绿色的 **Code** 按钮，那里下载的是源码。
+
+安装包会同时安装：
 
 - Photoshop 插件 Arttrace
 - 桌面端导出工具 Arttrace Render
@@ -25,15 +36,6 @@ Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘�
 安装完成并重新打开 Photoshop 后，请在 Photoshop 顶部菜单中点击 **增效工具**，然后选择 **Arttrace**。
 
 如果你使用的是英文版 Photoshop，请点击顶部菜单中的 **Plugins -> Arttrace**。
-
-## 功能简介
-
-- 将 Photoshop 绘画过程记录为 JPEG 步骤截图。
-- 统计每个作品的录制步骤和绘画时长。
-- 支持长时间绘画时自动拆分为多个 part。
-- 生成 Arttrace Render 可以读取的元数据。
-- 在 Photoshop 插件内提供快速 GIF 预览。
-- 支持中文和英文界面。
 
 ## 使用要求
 
@@ -91,15 +93,30 @@ Arttrace 目前仍处于早期公开测试阶段。元数据格式会尽量保�
 
 # Arttrace Photoshop Plugin
 
-Current plugin version: **v0.90**
+Current version: **v0.90 macOS public beta**
 
 Arttrace is a Photoshop UXP panel for recording the drawing process as a sequence of snapshots. It is designed for artists who want to turn their creative process into timelapse videos or GIF previews.
 
 This repository contains the open-source Photoshop plugin. The companion desktop app, **Arttrace Render**, is distributed separately as an installer in GitHub Releases, but its source code is not included in this repository.
 
+## What It Does
+
+- Records Photoshop drawing history as JPEG snapshots.
+- Tracks step count and working time for each artwork.
+- Supports multi-part project folders for long sessions.
+- Generates metadata for Arttrace Render.
+- Provides quick GIF preview inside the Photoshop panel.
+- Supports Chinese and English UI.
+
 ## Download and Install
 
-For regular users, the recommended way is to download the macOS installer from GitHub Releases. The installer includes:
+For regular users, the recommended way is to download the macOS installer from GitHub Releases:
+
+[Download Arttrace macOS v0.90](https://github.com/Yemiey/Arttrace-Plugin/releases/tag/v0.90)
+
+If you are not familiar with GitHub, download `Arttrace-macOS-v0.90.zip` from the Release page. Do not use the green **Code** button unless you want the source code.
+
+The installer includes:
 
 - The Arttrace Photoshop plugin
 - The Arttrace Render desktop export app
@@ -112,15 +129,6 @@ After installation, fully quit and reopen Photoshop, then open **Plugins -> Artt
 After installation and restarting Photoshop, open the top menu: **Plugins -> Arttrace**.
 
 In Chinese Photoshop, this menu is translated as **增效工具**.
-
-## What It Does
-
-- Records Photoshop drawing history as JPEG snapshots.
-- Tracks step count and working time for each artwork.
-- Supports multi-part project folders for long sessions.
-- Generates metadata for Arttrace Render.
-- Provides quick GIF preview inside the Photoshop panel.
-- Supports Chinese and English UI.
 
 ## Requirements
 
