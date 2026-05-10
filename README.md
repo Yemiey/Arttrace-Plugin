@@ -14,7 +14,13 @@ Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘�
 - 桌面端导出工具 Arttrace Render
 - 图形化卸载器 Arttrace Uninstaller
 
-安装完成后，请完全退出并重新打开 Photoshop，然后在顶部菜单中打开：**插件 / Plugins -> Arttrace**。
+安装完成后，请完全退出并重新打开 Photoshop，然后在顶部菜单中打开：**增效工具 / Plugins -> Arttrace**。
+
+## 在哪里打开插件
+
+安装完成并重新打开 Photoshop 后，请在 Photoshop 顶部菜单中点击 **增效工具**，然后选择 **Arttrace**。
+
+如果你使用的是英文版 Photoshop，请点击顶部菜单中的 **Plugins -> Arttrace**。
 
 ## 功能简介
 
@@ -40,7 +46,7 @@ Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘�
 3. 点击 **Add Plugin**。
 4. 选择本文件夹里的 `manifest.json`。
 5. 点击 **Load**。
-6. 打开 Photoshop，在插件菜单中启动 Arttrace 面板。
+6. 打开 Photoshop，在“增效工具”菜单中启动 Arttrace 面板。
 
 ## 文件说明
 
@@ -96,6 +102,12 @@ For regular users, the recommended way is to download the macOS installer from G
 - The Arttrace Uninstaller GUI app
 
 After installation, fully quit and reopen Photoshop, then open **Plugins -> Arttrace** from the top menu.
+
+## Where to Find the Plugin
+
+After installation and restarting Photoshop, open the top menu: **Plugins -> Arttrace**.
+
+In Chinese Photoshop, this menu is translated as **增效工具**.
 
 ## What It Does
 
