@@ -21,12 +21,10 @@
       "path": "icons/icon-192.png"
     }
   ],
-  "host": [
-    {
-      "app": "PS",
-      "minVersion": "25.0.0"
-    }
-  ],
+  "host": {
+    "app": "PS",
+    "minVersion": "25.0.0"
+  },
   "type": "panel",
   "entrypoints": [
     {
