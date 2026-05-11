@@ -1,3 +1,4 @@
+
 # Arttrace Photoshop 插件
 
 当前版本：**v0.90 macOS 公开测试版**
@@ -14,7 +15,7 @@ Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘�
 - 生成 Arttrace Render 可以读取的元数据。
 - 在 Photoshop 插件内提供快速 GIF 预览。
 - 支持中文和英文界面。
-
+<img width="1245" height="802" alt="76d639e84f07c465ee0fe51ae5330d06" src="https://github.com/user-attachments/assets/5c93220f-4847-4c1b-b457-67d2ff039f9c" />
 ## 下载与安装
 
 普通用户建议直接下载 GitHub Releases 中的 macOS 安装包：
