@@ -15,7 +15,9 @@ Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘�
 - 生成 Arttrace Render 可以读取的元数据。
 - 在 Photoshop 插件内提供快速 GIF 预览。
 - 支持中文和英文界面。
-<img width="1245" height="802" alt="76d639e84f07c465ee0fe51ae5330d06" src="https://github.com/user-attachments/assets/5c93220f-4847-4c1b-b457-67d2ff039f9c" />
+<img width="1000" alt="76d639e84f07c465ee0fe51ae5330d06" src="https://github.com/user-attachments/assets/5c93220f-4847-4c1b-b457-67d2ff039f9c" />
+
+
 ## 下载与安装
 
 普通用户建议直接下载 GitHub Releases 中的 macOS 安装包：
@@ -55,6 +57,8 @@ Arttrace 是一个用于 Adobe Photoshop 的 UXP 面板插件，可以记录绘�
 5. 点击 **Load**。
 6. 打开 Photoshop，在“增效工具”菜单中启动 Arttrace 面板。
 
+
+
 ## 文件说明
 
 ```text
@@ -74,6 +78,7 @@ icons/              插件入口图标
 3. 正常绘画。
 4. 结束录制后，插件会写入 `metadata.json`。
 5. 将生成的工程文件夹拖入 Arttrace Render，即可导出视频或 GIF。
+<img width="600" alt="截屏2026-05-11 20 32 09" src="https://github.com/user-attachments/assets/b635a321-4f60-4bc2-9edd-72f422b6f522" />
 
 ## 开源与隐私
 
